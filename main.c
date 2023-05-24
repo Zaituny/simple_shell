@@ -1,44 +1,48 @@
 #include "shell.h"
 
 /**
- * main - Entry point
+ * main - entry point
+ * @ac: arg count
+ * @av: arg vector
  *
- * Return: Always 0
+ * Return: 0 on success, 1 on error
  */
 
 #define BUFFER_SIZE 1024
 
 int main(void) {
-    char command[BUFFER_SIZE];
-    pid_t child_pid;
-    int status;
+    char *command;
+    char buffer[BUFFER_SIZE];
 
     while (1) {
         printf("#cisfun$ ");
-        fgets(command, BUFFER_SIZE, stdin);
+        if (!fgets(buffer, BUFFER_SIZE, stdin))
+            break;  // Exit on Ctrl+D (EOF)
 
-        // Remove the trailing newline character from the command
-        if (command[strlen(command) - 1] == '\n') {
-            command[strlen(command) - 1] = '\0';
-        }
+        // Remove trailing newline character
+        if (buffer[strlen(buffer) - 1] == '\n')
+            buffer[strlen(buffer) - 1] = '\0';
 
-        if (strlen(command) > 0) {
-            child_pid = fork();
-            if (child_pid == -1) {
-                perror("fork");
+        command = buffer;
+
+        // Check if the command is "exit"
+        if (strcmp(command, "exit") == 0)
+            break;
+
+        // Execute the command
+        if (fork() == 0) {
+            // Child process
+            if (execlp(command, command, NULL) == -1) {
+                // Command not found
+                printf("%s: command not found\n", command);
                 exit(EXIT_FAILURE);
-            } else if (child_pid == 0) {
-                // Child process
-                if (execve(command, NULL, NULL) == -1) {
-                    perror("execve");
-                    exit(EXIT_FAILURE);
-                }
-            } else {
-                // Parent process
-                wait(&status);
             }
+        } else {
+            // Parent process
+            wait(NULL);  // Wait for the child process to complete
         }
     }
 
+    printf("\n");
     return 0;
 }
