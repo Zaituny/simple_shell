@@ -5,40 +5,38 @@
  *
  * Return: Always 0
  */
+
 #define BUFFER_SIZE 1024
 
-int main(void)
-{
-    char buffer[BUFFER_SIZE];
-    ssize_t bytes_read;
-    size_t buffer_len = BUFFER_SIZE;
+int main(void) {
+    char command[BUFFER_SIZE];
+    pid_t child_pid;
+    int status;
 
-    while (1)
-    {
+    while (1) {
         printf("#cisfun$ ");
+        fgets(command, BUFFER_SIZE, stdin);
 
-        bytes_read = getline(&buffer, &buffer_len, stdin);
-        if (bytes_read == -1)
-        {
-            printf("\n");
-            break;
+        // Remove the trailing newline character from the command
+        if (command[strlen(command) - 1] == '\n') {
+            command[strlen(command) - 1] = '\0';
         }
 
-        buffer[bytes_read - 1] = '\0'; /* Remove the newline character */
-
-        if (fork() == 0)
-        {
-            /* Child process */
-            if (execve(buffer, NULL, NULL) == -1)
-            {
-                perror("execve");
+        if (strlen(command) > 0) {
+            child_pid = fork();
+            if (child_pid == -1) {
+                perror("fork");
                 exit(EXIT_FAILURE);
+            } else if (child_pid == 0) {
+                // Child process
+                if (execve(command, NULL, NULL) == -1) {
+                    perror("execve");
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                // Parent process
+                wait(&status);
             }
-        }
-        else
-        {
-            /* Parent process */
-            wait(NULL);
         }
     }
 
