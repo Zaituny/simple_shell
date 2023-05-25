@@ -67,6 +67,7 @@ void handle_child_process(char *command)
 	}
 
 	pid_t pid = fork();
+
 	if (pid == -1)
 	{
 		perror("fork");
