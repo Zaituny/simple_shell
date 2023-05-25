@@ -13,6 +13,7 @@
 /* Function declarations */
 void execute_command(char *command);
 void handle_child_process(char *command);
-void handle_parent_process(void);
+void execute_child_process(char *command, int pipefd[]);
+void execute_parent_process(int pipefd[]);
 
 #endif /* SHELL_H */
