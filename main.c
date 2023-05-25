@@ -1,12 +1,12 @@
 #include "shell.h"
 
+#define BUFFER_SIZE 1024
+
 /**
- * main - entry point
+ * main - Entry point
  *
  * Return: 0 on success, 1 on error
  */
-#define BUFFER_SIZE 1024
-
 int main(void)
 {
 	char *command;
@@ -22,7 +22,15 @@ int main(void)
 		if (buffer[strlen(buffer) - 1] == '\n')
 			buffer[strlen(buffer) - 1] = '\0';
 
-		command = buffer;
+		/* Tokenize the command and arguments */
+		char *args[10]; /* Assuming a maximum of 10 arguments (adjust as needed) */
+		int i = 0;
+		args[i++] = strtok(buffer, " "); /* Tokenize the command */
+		while (i < 10 && (args[i] = strtok(NULL, " ")) != NULL)
+			i++;
+		args[i] = NULL; /* Set the last element to NULL for execvp */
+
+		command = args[0];
 
 		/* Check if the command is "exit" */
 		if (strcmp(command, "exit") == 0)
@@ -32,7 +40,7 @@ int main(void)
 		if (fork() == 0)
 		{
 			/* Child process */
-			if (execlp(command, command, NULL) == -1)
+			if (execvp(command, args) == -1)
 			{
 				/* Command not found */
 				printf("%s: command not found\n", command);
