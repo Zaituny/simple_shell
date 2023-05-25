@@ -2,14 +2,12 @@
 
 /**
  * main - entry point
- * @ac: arg count
- * @av: arg vector
  *
  * Return: 0 on success, 1 on error
  */
 #define BUFFER_SIZE 1024
 
-int main(int ac, char **av)
+int main(void)
 {
 	char *command;
 	char buffer[BUFFER_SIZE];
