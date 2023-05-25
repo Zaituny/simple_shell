@@ -32,8 +32,8 @@ int main(void)
 		if (fork() == 0)
 		{
 			/* Child process */
-			char *args[] = {command, NULL};
-			if (execvp(args[0], args) == -1)
+			char *args[] = {"/bin/sh", "-c", command, NULL};
+			if (execve(args[0], args, NULL) == -1)
 			{
 				/* Command not found */
 				printf("%s: command not found\n", command);
