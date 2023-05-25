@@ -65,15 +65,53 @@ void execute_command(char *command)
  */
 void handle_child_process(char *command)
 {
-	char *args[] = {"/bin/sh", "-c", NULL, NULL};
+	int pipefd[2];
+	pid_t pid;
 
-	args[2] = command;
-
-	if (execve(args[0], args, NULL) == -1)
+	if (pipe(pipefd) == -1)
 	{
-		/* Command not found */
-		perror(command);
+		perror("pipe");
 		exit(EXIT_FAILURE);
+	}
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pid == 0)
+	{
+		/* Child process */
+		close(pipefd[0]); /* Close the read end of the pipe */
+		dup2(pipefd[1], STDOUT_FILENO); /* Redirect stdout to the write end of the pipe */
+		close(pipefd[1]); /* Close the write end of the pipe */
+
+		if (execlp(command, command, NULL) == -1)
+		{
+			/* Command not found */
+			perror(command);
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		/* Parent process */
+		char output[BUFFER_SIZE];
+		int nbytes;
+
+		close(pipefd[1]); /* Close the write end of the pipe */
+
+		while ((nbytes = read(pipefd[0], output, BUFFER_SIZE - 1)) > 0)
+		{
+			output[nbytes] = '\0';
+			printf("%s", output); /* Print the output from the child process */
+		}
+
+		close(pipefd[0]); /* Close the read end of the pipe */
+
+		wait(NULL); /* Wait for the child process to complete */
 	}
 }
 
