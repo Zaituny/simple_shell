@@ -8,4 +8,11 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#define BUFFER_SIZE 1024
+
+/* Function declarations */
+void execute_command(char *command);
+void handle_child_process(char *command);
+void handle_parent_process(void);
+
 #endif /* SHELL_H */
