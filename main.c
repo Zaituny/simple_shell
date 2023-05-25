@@ -83,3 +83,4 @@ void handle_parent_process(void)
 {
 	wait(NULL); /* Wait for the child process to complete */
 }
+
