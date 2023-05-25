@@ -24,32 +24,34 @@ void execute_command(char *command)
  */
 void handle_child_process(char *command)
 {
-	int pipefd[2];
+        pid_t pid;
 
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
+        int pipefd[2];
 
-	pid_t pid = fork();
+        if (pipe(pipefd) == -1)
+        {
+                perror("pipe");
+                exit(EXIT_FAILURE);
+        }
 
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
+        pid = fork();
 
-	if (pid == 0)
-	{
-		/* Child process */
-		execute_child_process(command, pipefd);
-	}
-	else
-	{
-		/* Parent process */
-		execute_parent_process(pipefd);
-	}
+        if (pid == -1)
+        {
+                perror("fork");
+                exit(EXIT_FAILURE);
+        }
+
+        if (pid == 0)
+        {
+                /* Child process */
+                execute_child_process(command, pipefd);
+        }
+        else
+        {
+                /* Parent process */
+                execute_parent_process(pipefd);
+        }
 }
 
 /**
