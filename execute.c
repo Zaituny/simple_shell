@@ -79,16 +79,33 @@ void execute_parent_process(int pipefd[])
 {
 	char output[BUFFER_SIZE];
 	int nbytes;
+	int total_bytes = 0;
+	char buffer[BUFFER_SIZE];
+	int buffer_size = 0;
 
 	close(pipefd[1]);
 
 	while ((nbytes = read(pipefd[0], output, BUFFER_SIZE - 1)) > 0)
 	{
 		output[nbytes] = '\0';
-		printf("%s", output);
+		strncpy(buffer + buffer_size, output, nbytes);
+		buffer_size += nbytes;
 	}
 
 	close(pipefd[0]);
+
+	/* Process the buffer and print output in the correct order */
+	for (int i = 0; i < buffer_size; i++)
+	{
+		if (buffer[i] == '\n')
+		{
+			buffer[i] = '\0';
+			printf("%s\n", buffer);
+			buffer_size -= (i + 1);
+			memmove(buffer, buffer + i + 1, buffer_size);
+			i = -1;
+		}
+	}
 
 	wait(NULL);
 }
