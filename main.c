@@ -32,7 +32,7 @@ int main(void)
 		if (fork() == 0)
 		{
 			/* Child process */
-			if (execlp(command, command, NULL) == -1)
+			if (execve(command, argv, NULL) == -1)
 			{
 				/* Command not found */
 				printf("%s: command not found\n", command);
