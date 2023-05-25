@@ -15,6 +15,7 @@ int main(void)
 	while (1)
 	{
 		printf("#cisfun$ ");
+
 		if (!fgets(buffer, BUFFER_SIZE, stdin))
 			break; /* Exit on Ctrl+D (EOF) */
 
