@@ -94,3 +94,10 @@ void execute_parent_process(int pipefd[])
 	wait(NULL);
 }
 
+/**
+ * handle_parent_process - Handle the parent process
+ */
+void handle_parent_process(void)
+{
+    wait(NULL);
+}
