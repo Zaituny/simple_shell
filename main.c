@@ -5,12 +5,6 @@
  *
  * Return: 0 on success, 1 on error
  */
-#define BUFFER_SIZE 1024
-
-/* Function declarations */
-void execute_command(char *command);
-void handle_child_process(char *command);
-void handle_parent_process(void);
 
 int main(void)
 {
