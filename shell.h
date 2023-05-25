@@ -8,4 +8,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+int main(void);
+
 #endif /* SHELL_H */
