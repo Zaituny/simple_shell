@@ -37,7 +37,7 @@ int main(void)
 			if (execve(args[0], args, NULL) == -1)
 			{
 				/* Command not found */
-				printf("%s: command not found\n", command);
+				perror(command);
 				exit(EXIT_FAILURE);
 			}
 		}
