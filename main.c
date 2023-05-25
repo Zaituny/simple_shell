@@ -66,6 +66,7 @@ void execute_command(char *command)
 void handle_child_process(char *command)
 {
 	char *args[] = {"/bin/sh", "-c", NULL, NULL};
+
 	args[2] = command;
 
 	if (execve(args[0], args, NULL) == -1)
@@ -83,4 +84,3 @@ void handle_parent_process(void)
 {
 	wait(NULL); /* Wait for the child process to complete */
 }
-
