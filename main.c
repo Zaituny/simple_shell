@@ -7,42 +7,47 @@
  *
  * Return: 0 on success, 1 on error
  */
-
 #define BUFFER_SIZE 1024
 
-int main(void) {
+int main(int ac, char **av)
+{
 	char *command;
 	char buffer[BUFFER_SIZE];
 
-	while (1) {
+	while (1)
+	{
 		printf("#cisfun$ ");
 		if (!fgets(buffer, BUFFER_SIZE, stdin))
-			break;  // Exit on Ctrl+D (EOF)
+			break; /* Exit on Ctrl+D (EOF) */
 
-		// Remove trailing newline character
+		/* Remove trailing newline character */
 		if (buffer[strlen(buffer) - 1] == '\n')
 			buffer[strlen(buffer) - 1] = '\0';
 
 		command = buffer;
 
-		// Check if the command is "exit"
+		/* Check if the command is "exit" */
 		if (strcmp(command, "exit") == 0)
 			break;
 
-		// Execute the command
-		if (fork() == 0) {
-			// Child process
-			if (execlp(command, command, NULL) == -1) {
-				// Command not found
+		/* Execute the command */
+		if (fork() == 0)
+		{
+			/* Child process */
+			if (execlp(command, command, NULL) == -1)
+			{
+				/* Command not found */
 				printf("%s: command not found\n", command);
 				exit(EXIT_FAILURE);
 			}
-		} else {
-			// Parent process
-			wait(NULL);  // Wait for the child process to complete
+		}
+		else
+		{
+			/* Parent process */
+			wait(NULL); /* Wait for the child process to complete */
 		}
 	}
 
 	printf("\n");
-	return 0;
+	return (0);
 }
