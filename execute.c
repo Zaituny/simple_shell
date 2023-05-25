@@ -63,6 +63,7 @@ void execute_parent_process(int pipefd[])
 	int nbytes;
 	int buffer_size = 0;
 	char buffer[BUFFER_SIZE];
+	int i;
 
 	close(pipefd[1]);
 
@@ -76,7 +77,7 @@ void execute_parent_process(int pipefd[])
 	close(pipefd[0]);
 
 	/* Process the buffer and print output in the correct order */
-	for (int i = 0; i < buffer_size; i++)
+	for (i = 0; i < buffer_size; i++)
 	{
 		if (buffer[i] == '\n')
 		{
@@ -90,7 +91,6 @@ void execute_parent_process(int pipefd[])
 
 	wait(NULL);
 }
-
 /**
  * execute_command - Execute the given command
  * @command: The command to execute
