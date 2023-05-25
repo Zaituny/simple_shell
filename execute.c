@@ -114,5 +114,5 @@ void execute_command(char *command)
  */
 void handle_parent_process(void)
 {
-	  wait(NULL);
+	wait(NULL);
 }
